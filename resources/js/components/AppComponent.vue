@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-3">
     <FormComponent></FormComponent>
-    <CommentsComponent></CommentsComponent>
+    <CommentsComponent ref="commentsComponent"></CommentsComponent>
   </div>
 </template>
 

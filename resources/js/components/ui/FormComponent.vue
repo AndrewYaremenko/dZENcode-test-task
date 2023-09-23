@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-4 offset-md-4">
-      <form action="" method="POST">
+      <form @submit.prevent="submitForm">
         <div class="mb-2">
           <label for="name" class="form-label">User Name</label>
           <input
@@ -10,6 +10,7 @@
             id="name"
             name="name"
             placeholder="User Name"
+            v-model="name"
           />
         </div>
         <div class="mb-2">
@@ -20,6 +21,7 @@
             id="email"
             name="email"
             placeholder="Email"
+            v-model="email"
           />
         </div>
         <div class="mb-2">
@@ -30,17 +32,18 @@
             id="homepage"
             name="homepage"
             placeholder="Home page"
+            v-model="homepage"
           />
         </div>
         <div class="mb-3">
-          <label for="comment" class="form-label">Comment</label>
+          <label for="content" class="form-label">Content</label>
           <textarea
             class="form-control"
-            id="comment"
-            name="comment"
+            id="content"
+            name="content"
             rows="2"
-            placeholder="Comment"
-            v-model="commentText"
+            placeholder="Content"
+            v-model="content"
           ></textarea>
           <div class="btn-group mt-1" role="group" aria-label="Basic example">
             <button
@@ -73,6 +76,18 @@
             </button>
           </div>
         </div>
+
+        <div class="mb-2">
+          <label for="file" class="form-label">File</label>
+          <input
+            type="file"
+            class="form-control"
+            id="file"
+            name="file"
+            placeholder="file"
+          />
+        </div>
+
         <button type="submit" class="btn btn-primary">Comment</button>
       </form>
     </div>
@@ -80,15 +95,43 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      commentText: "",
+      name: "",
+      email: "",
+      homepage: "",
+      content: "",
     };
   },
   methods: {
     insertTag(tag) {
-      this.commentText += tag;
+      this.content += tag;
+    },
+    submitForm() {
+    const formData = {
+      name: this.name,
+      email: this.email,
+      homepage: this.homepage,
+      content: this.content,
+    };
+
+    axios
+      .post("/api/comments", formData)
+      .then((response) => {
+        console.log("Server response:", response.data);
+        this.name = "";
+        this.email = "";
+        this.homepage = "";
+        this.content = "";
+
+        this.$root.$refs.commentsComponent.fetchComments();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     },
   },
 };
