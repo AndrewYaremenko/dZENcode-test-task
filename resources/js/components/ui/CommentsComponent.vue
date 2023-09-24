@@ -35,20 +35,13 @@
     <nav aria-label="Page navigation">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
-          <a class="page-link" href="" @click.prevent="prevPage">Previous</a>
+          <a class="page-link" href="" @click.prevent="prevPage">←</a>
         </li>
-        <li
-          class="page-item"
-          v-for="pageNumber in totalPages"
-          :key="pageNumber"
-          :class="{ active: currentPage === pageNumber }"
-        >
-          <a class="page-link" href="" @click.prevent="goToPage(pageNumber)">{{
-            pageNumber
-          }}</a>
+        <li class="page-item">
+          <span class="page-link">{{ currentPage }}</span>
         </li>
         <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-          <a class="page-link" href="" @click.prevent="nextPage">Next</a>
+          <a class="page-link" href="" @click.prevent="nextPage">→</a>
         </li>
       </ul>
     </nav>
@@ -150,7 +143,6 @@ export default {
       const cleanHtml = DOMPurify.sanitize(content, {
         ALLOWED_TAGS: allowedTags,
         ALLOWED_ATTR: allowedAttributesForA,
-        
       });
 
       return cleanHtml;
