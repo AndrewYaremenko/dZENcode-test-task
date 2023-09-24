@@ -10,8 +10,12 @@
             id="name"
             name="name"
             placeholder="User Name"
+            :class="errorClass.name"
             v-model="name"
           />
+          <div class="invalid-feedback" v-if="errors.name">
+            {{ errors.name[0] }}
+          </div>
         </div>
         <div class="mb-2">
           <label for="email" class="form-label">Email</label>
@@ -21,8 +25,12 @@
             id="email"
             name="email"
             placeholder="Email"
+            :class="errorClass.email"
             v-model="email"
           />
+          <div class="invalid-feedback" v-if="errors.email">
+            {{ errors.email[0] }}
+          </div>
         </div>
         <div class="mb-2">
           <label for="homepage" class="form-label">Home page</label>
@@ -32,8 +40,12 @@
             id="homepage"
             name="homepage"
             placeholder="Home page"
+            :class="errorClass.homepage"
             v-model="homepage"
           />
+          <div class="invalid-feedback" v-if="errors.homepage">
+            {{ errors.homepage[0] }}
+          </div>
         </div>
         <div class="mb-3">
           <label for="content" class="form-label">Content</label>
@@ -43,8 +55,12 @@
             name="content"
             rows="2"
             placeholder="Content"
+            :class="errorClass.content"
             v-model="content"
           ></textarea>
+          <div class="invalid-feedback" v-if="errors.content">
+            {{ errors.content[0] }}
+          </div>
           <div class="btn-group mt-1" role="group" aria-label="Basic example">
             <button
               type="button"
@@ -86,6 +102,9 @@
             name="file"
             placeholder="file"
           />
+          <div class="invalid-feedback" v-if="errors.file">
+            {{ errors.file[0] }}
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary">Comment</button>
@@ -104,6 +123,8 @@ export default {
       email: "",
       homepage: "",
       content: "",
+      errors: {},
+      errorClass: {},
     };
   },
   methods: {
@@ -111,27 +132,37 @@ export default {
       this.content += tag;
     },
     submitForm() {
-    const formData = {
-      name: this.name,
-      email: this.email,
-      homepage: this.homepage,
-      content: this.content,
-    };
+      const formData = {
+        name: this.name,
+        email: this.email,
+        homepage: this.homepage,
+        content: this.content,
+      };
 
-    axios
-      .post("/api/comments", formData)
-      .then((response) => {
-        console.log("Server response:", response.data);
-        this.name = "";
-        this.email = "";
-        this.homepage = "";
-        this.content = "";
+      axios
+        .post("/api/comments", formData)
+        .then((response) => {
+          console.log("Server response:", response.data);
+          this.name = "";
+          this.email = "";
+          this.homepage = "";
+          this.content = "";
+          this.errors = {};
+          this.errorClass = {};
 
-        this.$root.$refs.commentsComponent.fetchComments();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+          this.$root.$refs.commentsComponent.fetchComments();
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 422) {
+            this.errors = error.response.data.errors;
+            this.errorClass = {};
+            for (const field in this.errors) {
+              this.errorClass[field] = "is-invalid";
+            }
+          } else {
+            console.error("Error:", error);
+          }
+        });
     },
   },
 };

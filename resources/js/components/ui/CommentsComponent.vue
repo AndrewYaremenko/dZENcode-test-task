@@ -45,6 +45,7 @@
         </li>
       </ul>
     </nav>
+    <hr />
 
     <div
       class="col-md-9 alert alert-secondary"
