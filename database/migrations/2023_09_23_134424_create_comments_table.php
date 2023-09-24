@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('username');
             $table->string('email');
             $table->string('homepage')->nullable();
-            $table->int('parent')->nullable();
+            $table->integer('parent')->nullable();
             $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('content');
+            $table->binary('file')->nullable();
             $table->timestamps();
         });
     }

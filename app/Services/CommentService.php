@@ -18,8 +18,8 @@ class CommentService
             'email' => ['email', 'asc'],
         ];
 
-        $sortedBy = $request->input('sort', 'new');
-        if ($sortedBy === '' || $sortedBy === null || !array_key_exists($sortedBy, $sortOptions)) {
+        $sortedBy = $request->input('sort');
+        if (!array_key_exists($sortedBy, $sortOptions)) {
             $sortedBy = 'new';
         }
 

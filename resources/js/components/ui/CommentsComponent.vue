@@ -78,7 +78,7 @@
         </div>
       </div>
       <hr />
-      <p>{{ comment.content }}</p>
+      <p v-html="filterAndAllowHtml(comment.content)"></p>
 
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">Comment it</button>
@@ -89,6 +89,7 @@
 
 <script>
 import axios from "axios";
+import DOMPurify from "dompurify";
 
 export default {
   data() {
@@ -141,6 +142,18 @@ export default {
         this.currentPage = pageNumber;
         this.fetchComments();
       }
+    },
+    filterAndAllowHtml(content) {
+      const allowedTags = ["strong", "i", "a", "code"];
+      const allowedAttributesForA = ["href", "title"];
+
+      const cleanHtml = DOMPurify.sanitize(content, {
+        ALLOWED_TAGS: allowedTags,
+        ALLOWED_ATTR: allowedAttributesForA,
+        
+      });
+
+      return cleanHtml;
     },
   },
 };
