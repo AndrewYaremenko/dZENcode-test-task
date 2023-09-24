@@ -4,46 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Http\Requests\CommentRequest;
+use App\Services\CommentService;
+use App\Http\Resources\CommentResource;
 
 class CommentController extends Controller
 {
+
+    protected $commentService;
+
+    public function __construct(CommentService $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
     public function index(Request $request)
     {
-        $sortedBy = $request->input('sort');
-
         $comments = Comment::query();
+        $comments = $this->commentService->applySorting($request, $comments);
 
-        if ($sortedBy === 'new') {
-            $comments->orderBy('date', 'desc');
-        } elseif ($sortedBy === 'old') {
-            $comments->orderBy('date', 'asc');
-        } elseif ($sortedBy === 'name') {
-            $comments->orderBy('username');
-        } elseif ($sortedBy === 'email') {
-            $comments->orderBy('email');
-        }
-
-        $comments = $comments->paginate(3);
-
-        return response()->json([
-            'comments' => $comments,
-        ], 200);
+        return CommentResource::collection($comments);
     }
 
 
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
-        $data = $request->json()->all();
-
-        $comment = Comment::create([
-            'username' => $data['name'],
-            'email' => $data['email'],
-            'homepage' => $data['homepage'],
-            'content' => $data['content'],
-        ])->save();
+        $data = $request->validated();
+        $this->commentService->createComment($data);
 
         return response()->json([
-            'message' => 'comment is saved!',
+            'message' => 'Comment is saved!',
         ], 201);
     }
 }

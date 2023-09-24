@@ -117,8 +117,8 @@ export default {
           },
         })
         .then((response) => {
-          this.comments = response.data.comments.data;
-          this.totalPages = response.data.comments.last_page;
+          this.comments = response.data.data;
+          this.totalPages = response.data.meta.last_page;
         })
         .catch((error) => {
           console.error("Error during at getcomments", error);
