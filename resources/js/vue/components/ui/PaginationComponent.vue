@@ -7,10 +7,11 @@
       <li class="page-item">
         <span class="page-link">{{ currentPage }}</span>
       </li>
-      <li class="page-item" :class="{ disabled: currentPage === totalPages && currentPage === 1 }">
+      <li class="page-item" :class="{ disabled: currentPage === totalPages || totalPages === 1 }">
         <a class="page-link" href="" @click.prevent="nextPage">→</a>
       </li>
     </ul>
+
   </nav>
 </template>
 

@@ -108,6 +108,7 @@
             name="file"
             placeholder="file"
             ref="file"
+            accept=".jpg, .jpeg, .gif, .png, .txt"    
           />
           <div class="invalid-feedback" v-if="errors.file">
             {{ errors.file[0] }}
