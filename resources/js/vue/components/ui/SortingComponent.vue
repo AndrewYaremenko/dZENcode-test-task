@@ -39,5 +39,6 @@ export default {
       this.$emit("sortBy", field);
     },
   },
+  emits: ["sortBy"],
 };
 </script>

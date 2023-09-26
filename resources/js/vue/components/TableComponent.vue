@@ -1,16 +1,15 @@
 <template>
   <div class="col-md-8 offset-md-3 mt-5">
     <SortingComponent @sortBy="sortBy" />
-    <CommentsComponent
-      :comments="comments"
+    <PaginationComponent
       :currentPage="currentPage"
       :totalPages="totalPages"
       @prevPage="prevPage"
       @nextPage="nextPage"
-      @goToPage="goToPage"
-      @filterAndAllowHtml="filterAndAllowHtml"
     />
-    <PaginationComponent :currentPage="currentPage" :totalPages="totalPages" />
+    <CommentsComponent
+      :comments="comments"
+    />
   </div>
 </template>
 

@@ -7,7 +7,7 @@
       <li class="page-item">
         <span class="page-link">{{ currentPage }}</span>
       </li>
-      <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+      <li class="page-item" :class="{ disabled: currentPage === totalPages && currentPage === 1 }">
         <a class="page-link" href="" @click.prevent="nextPage">→</a>
       </li>
     </ul>
@@ -17,8 +17,8 @@
 <script>
 export default {
   props: {
-    currentPage: Number,
-    totalPages: Number,
+    currentPage: null,
+    totalPages: null,
   },
   methods: {
     prevPage() {
