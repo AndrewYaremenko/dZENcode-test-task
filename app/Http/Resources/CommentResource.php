@@ -15,7 +15,10 @@ class CommentResource extends JsonResource
             'email' => $this->email,
             'homepage' => $this->homepage,
             'date' => $this->date,
-            'content' => $this->content
+            'content' => $this->content,
+            'file' => base64_encode($this->file),
+            'parent_id' => $this->parent_id,
+            'child_comments' => CommentResource::collection($this->childComments),
         ];
     }
 }

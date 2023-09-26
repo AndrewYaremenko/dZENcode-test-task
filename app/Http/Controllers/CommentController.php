@@ -30,10 +30,11 @@ class CommentController extends Controller
     public function store(CommentRequest $request)
     {
         $data = $request->validated();
-        $this->commentService->createComment($data);
+        $comment = $this->commentService->createComment($data);
 
         return response()->json([
             'message' => 'Comment is saved!',
+            'comment' => $comment
         ], 201);
     }
 }

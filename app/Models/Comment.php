@@ -14,6 +14,17 @@ class Comment extends Model
         'email',
         'homepage',
         'date',
-        'content'
+        'content',
+        'parent_id'
     ];
+
+    public function parentComment()
+    {
+        return $this->belongsTo(Comment::class, 'parent_id');
+    }
+
+    public function childComments()
+    {
+        return $this->hasMany(Comment::class, 'parent_id')->with('childComments');
+    }
 }

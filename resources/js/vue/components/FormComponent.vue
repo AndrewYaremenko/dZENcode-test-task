@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="row">
     <div class="col-md-4 offset-md-4">
       <form @submit.prevent="submitForm">
@@ -49,6 +49,12 @@
         </div>
         <div class="mb-3">
           <label for="content" class="form-label">Content</label>
+          <p class="text-primary" v-if="replyId">
+            Reply to comment #{{ replyId }}
+            <a class="removeSelectId" href="" @click.prevent="clearReplyId"
+              >❌</a
+            >
+          </p>
           <textarea
             class="form-control"
             id="content"
@@ -101,6 +107,7 @@
             id="file"
             name="file"
             placeholder="file"
+            ref="file"
           />
           <div class="invalid-feedback" v-if="errors.file">
             {{ errors.file[0] }}
@@ -114,6 +121,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
 import axios from "axios";
 
 export default {
@@ -127,7 +135,14 @@ export default {
       errorClass: {},
     };
   },
+  computed: {
+    ...mapGetters(["replyId"]),
+  },
   methods: {
+    ...mapMutations(["setReplyId"]),
+    clearReplyId() {
+      this.setReplyId(null);
+    },
     insertTag(tag) {
       this.content += tag;
     },
@@ -137,10 +152,16 @@ export default {
         email: this.email,
         homepage: this.homepage,
         content: this.content,
+        file: this.$refs.file.files[0],
+        parent_id: this.replyId,
       };
 
       axios
-        .post("/api/comments", formData)
+        .post("/api/comments", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then((response) => {
           console.log("Server response:", response.data);
           this.name = "";
@@ -149,6 +170,8 @@ export default {
           this.content = "";
           this.errors = {};
           this.errorClass = {};
+          this.$refs.file.value = null;
+          this.setReplyId(null);
 
           this.$root.$refs.commentsComponent.fetchComments();
         })
@@ -167,3 +190,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.removeSelectId {
+  text-decoration: none;
+}
+</style>

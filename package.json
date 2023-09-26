@@ -17,6 +17,7 @@
         "@vitejs/plugin-vue": "^4.3.4",
         "dompurify": "^3.0.5",
         "vue": "^3.2.36",
-        "vue-loader": "^17.2.2"
+        "vue-loader": "^17.2.2",
+        "vuex": "^4.1.0"
     }
 }

@@ -28,16 +28,22 @@ class CommentService
             $query->orderBy(...$sortParams);
         }
 
-        return $query->paginate(3);
+        $query->whereNull('parent_id')->with('childComments')->get();
+
+        return $query->paginate(5);
     }
 
     public function createComment(array $data)
     {
-        return Comment::create([
-            'username' => $data['name'],
-            'email' => $data['email'],
-            'homepage' => $data['homepage'],
-            'content' => $data['content'],
-        ]);
+        $comment = new Comment();
+        $comment->username = $data['name'];
+        $comment->email = $data['email'];
+        $comment->homepage = $data['homepage'];
+        $comment->content = $data['content'];   
+        $comment->parent_id = $data['parent_id'];   
+
+        $comment->save();
+
+        return $comment;
     }
 }
