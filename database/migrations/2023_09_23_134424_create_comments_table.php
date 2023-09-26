@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username');
             $table->string('email');
             $table->string('homepage')->nullable();
-            $table->integer('parent_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('content');
             $table->timestamps();
