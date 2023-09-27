@@ -16,7 +16,6 @@ class CommentResource extends JsonResource
             'homepage' => $this->homepage,
             'date' => $this->date,
             'content' => $this->content,
-            'file' => base64_encode($this->file),
             'parent_id' => $this->parent_id,
             'child_comments' => CommentResource::collection($this->childComments),
         ];

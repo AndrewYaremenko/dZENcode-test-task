@@ -99,22 +99,6 @@
           </div>
         </div>
 
-        <div class="mb-2">
-          <label for="file" class="form-label">File</label>
-          <input
-            type="file"
-            class="form-control"
-            id="file"
-            name="file"
-            placeholder="file"
-            ref="file"
-            accept=".jpg, .jpeg, .gif, .png, .txt"    
-          />
-          <div class="invalid-feedback" v-if="errors.file">
-            {{ errors.file[0] }}
-          </div>
-        </div>
-
         <button type="submit" class="btn btn-primary">Comment</button>
       </form>
     </div>
@@ -153,16 +137,11 @@ export default {
         email: this.email,
         homepage: this.homepage,
         content: this.content,
-        file: this.$refs.file.files[0],
         parent_id: this.replyId,
       };
 
       axios
-        .post("/api/comments", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post("/api/comments", formData)
         .then((response) => {
           console.log("Server response:", response.data);
           this.name = "";
@@ -171,7 +150,6 @@ export default {
           this.content = "";
           this.errors = {};
           this.errorClass = {};
-          this.$refs.file.value = null;
           this.setReplyId(null);
 
           this.$root.$refs.commentsComponent.fetchComments();

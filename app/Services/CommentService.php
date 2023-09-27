@@ -35,14 +35,13 @@ class CommentService
 
     public function createComment(array $data)
     {
-        $comment = new Comment();
-        $comment->username = $data['name'];
-        $comment->email = $data['email'];
-        $comment->homepage = $data['homepage'];
-        $comment->content = $data['content'];   
-        $comment->parent_id = $data['parent_id'];   
-
-        $comment->save();
+        $comment = Comment::create([
+            'username' => $data['name'],
+            'email' => $data['email'],
+            'homepage' => $data['homepage'],
+            'content' => $data['content'],
+            'parent_id' => isset($data['parent_id']) ? $data['parent_id'] : null,
+        ]);
 
         return $comment;
     }
