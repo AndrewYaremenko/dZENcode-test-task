@@ -5,9 +5,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install zip pdo pdo_mysql \
-    && php artisan migrate \
-    && php artisan db:seed
+    && docker-php-ext-install zip pdo pdo_mysql
 
 COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
 

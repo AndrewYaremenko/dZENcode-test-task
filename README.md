@@ -23,3 +23,15 @@
     "parent_id": nullable|integer
 }
 ```
+
+## Установка с Docker
+
+- Загрузите репозиторий с помощью команды ```git clone https://github.com/AndrewYaremenko/dZENcode-test-task.git```
+- Перейдите в директорию проекта: ```cd dZENcode-test-task```
+- Установите необходимые PHP библиотеки, выполнив команду: ```composer install```
+- Установите необходимые NPM библиотеки, выполнив команду: ```npm install```
+- Скопируйте файл ```.env.docker``` и переименуйте его в ```.env```
+- Сгенерируйте ключ приложения, выполнив команду: ```php artisan key:generate```
+- Запустить приложение: ```docker-compose up -d```
+- Открыть терминал контейнера: ```docker exec -it project_app bash```
+- Выполните миграцию таблиц в БД с помощью команды: ```php artisan migrate```
