@@ -6,10 +6,10 @@
 - Vue3, vuex, Bootstrap5, DOMPurify
 - MySQL
 
-## Функционал:
+## Функционал
 - SPA приложение, создание пользователями комментариев, возможность отвечать на комментарии, сортировать их за параметрами, использовать определенные HTML теги
 
-## REST API:
+## API:
 
 #### Comments
 **GET /api/comments** - CommentController:index<br>
