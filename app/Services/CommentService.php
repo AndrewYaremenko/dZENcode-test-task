@@ -30,7 +30,7 @@ class CommentService
 
         $query->whereNull('parent_id')->with('childComments')->get();
 
-        return $query->paginate(2);
+        return $query->paginate(25);
     }
 
     public function createComment(array $data)
