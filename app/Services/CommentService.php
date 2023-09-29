@@ -20,7 +20,7 @@ class CommentService
 
         $sortedBy = $request->input('sort');
         if (!array_key_exists($sortedBy, $sortOptions)) {
-            $sortedBy = 'old';
+            $sortedBy = 'new';
         }
 
         if (array_key_exists($sortedBy, $sortOptions)) {
