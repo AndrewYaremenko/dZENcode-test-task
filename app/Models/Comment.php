@@ -15,7 +15,9 @@ class Comment extends Model
         'homepage',
         'date',
         'content',
-        'parent_id'
+        'parent_id',
+        'attachment',
+        'attachment_type'
     ];
 
     public function parentComment()

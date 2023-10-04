@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('content');
+            $table->string('attachment')->nullable();
+            $table->string('attachment_type')->nullable();
             $table->timestamps();
 
             $table->foreign('parent_id')->references('id')->on('comments')->onDelete('cascade');

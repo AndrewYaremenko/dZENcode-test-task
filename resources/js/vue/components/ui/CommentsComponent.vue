@@ -17,11 +17,33 @@
           <span>{{ comment.date }}</span>
         </div>
         <div v-if="comment.homepage">
-          <span>{{ comment.homepage }}</span>
+          <a :href="comment.homepage">{{ comment.homepage }}</a>
         </div>
       </div>
       <hr />
       <p v-html="filterAndAllowHtml(comment.content)"></p>
+
+      <div>
+        <div v-if="comment.attachment_type === 'image'">
+          <a @click="openImageModal(comment.attachment)">
+            <img
+              :src="comment.attachment"
+              alt="attachment"
+              class="attachmentImage"
+            />
+          </a>
+        </div>
+
+        <div v-else-if="comment.attachment_type === 'text/plain'">
+          <a
+            @click.prevent="openTextModal(comment.attachment)"
+            href=""
+            class="attachmentText"
+          >
+            Attachment text file (open)
+          </a>
+        </div>
+      </div>
 
       <div class="d-flex justify-content-end">
         <button
@@ -43,22 +65,32 @@
         comment.child_comments.length > 0
       "
       :comments="comment.child_comments"
+      @openTextModal="openTextModal"
+      @openImageModal="openImageModal"
     ></ReplyComponent>
   </div>
+
+  <ImageModalComponent></ImageModalComponent>
+  <TextModalComponent></TextModalComponent>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapGetters } from "vuex";
 
 import DOMPurify from "dompurify";
 import ReplyComponent from "./ReplyComponent.vue";
+import ImageModalComponent from "./ImageModalComponent.vue";
+import TextModalComponent from "./TextModalComponent.vue";
 
 export default {
   components: {
     ReplyComponent,
+    ImageModalComponent,
+    TextModalComponent,
   },
   computed: {
     ...mapState(["replyId"]),
+    ...mapGetters(["modalImage", "modalTextContent", "modalTextLink"]),
   },
   props: {
     comments: Array,
@@ -69,6 +101,32 @@ export default {
     };
   },
   methods: {
+    ...mapMutations([
+      "setModalImage",
+      "setModalTextContent",
+      "setModalTextLink",
+    ]),
+    openTextModal(fileUrl) {
+      axios
+        .get(fileUrl)
+        .then((response) => {
+          const fileContent = response.data;
+
+          this.setModalTextContent(fileContent);
+          this.setModalTextLink(fileUrl);
+
+          $("#textModal").modal("show");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
+    openImageModal(imageSrc) {
+      this.setModalImage(imageSrc);
+      $("#imageModal").modal("show");
+    },
+
     toggleReplies(commentId) {
       const index = this.visibleReplyIds.indexOf(commentId);
       if (index === -1) {
@@ -77,10 +135,13 @@ export default {
         this.visibleReplyIds.splice(index, 1);
       }
     },
+
     isReplyVisible(commentId) {
       return this.visibleReplyIds.includes(commentId);
     },
+
     ...mapMutations(["setReplyId"]),
+
     filterAndAllowHtml(content) {
       const allowedTags = ["strong", "i", "a", "code"];
       const allowedAttributesForA = ["href", "title"];
@@ -95,3 +156,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.attachmentImage {
+  width: 25%;
+  height: 25%;
+}
+</style>

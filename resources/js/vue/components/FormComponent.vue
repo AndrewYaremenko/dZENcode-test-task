@@ -99,6 +99,17 @@
           </div>
         </div>
 
+        <div class="mb-3">
+          <label for="attachment" class="form-label">File</label>
+          <input
+            type="file"
+            class="form-control form-control-file"
+            id="attachment"
+            name="attachment"
+            @change="handleAttachmentChange"
+          />
+        </div>
+
         <button type="submit" class="btn btn-primary">Comment</button>
       </form>
     </div>
@@ -116,6 +127,7 @@ export default {
       email: "",
       homepage: "",
       content: "",
+      attachment: null,
       errors: {},
       errorClass: {},
     };
@@ -124,6 +136,9 @@ export default {
     ...mapGetters(["replyId"]),
   },
   methods: {
+    handleAttachmentChange(event) {
+      this.attachment = event.target.files[0];
+    },
     ...mapMutations(["setReplyId"]),
     clearReplyId() {
       this.setReplyId(null);
@@ -132,13 +147,19 @@ export default {
       this.content += tag;
     },
     submitForm() {
-      const formData = {
-        name: this.name,
-        email: this.email,
-        homepage: this.homepage,
-        content: this.content,
-        parent_id: this.replyId,
-      };
+      const formData = new FormData();
+      formData.append("name", this.name);
+      formData.append("email", this.email);
+      formData.append("homepage", this.homepage);
+      formData.append("content", this.content);
+
+      if (this.replyId) {
+        formData.append("parent_id", this.replyId);
+      }
+
+      if (this.attachment) {
+        formData.append("attachment", this.attachment);
+      }
 
       axios
         .post("/api/comments", formData)
@@ -150,6 +171,9 @@ export default {
           this.content = "";
           this.errors = {};
           this.errorClass = {};
+          this.attachment = null;
+          document.getElementById("attachment").value = "";
+
           this.setReplyId(null);
 
           this.$root.$refs.commentsComponent.fetchComments();

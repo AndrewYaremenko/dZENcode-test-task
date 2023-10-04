@@ -6,7 +6,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Requests\CommentRequest;
 use App\Services\CommentService;
-use App\Http\Resources\CommentResource;
+
 
 class CommentController extends Controller
 {
@@ -20,21 +20,17 @@ class CommentController extends Controller
 
     public function index(Request $request)
     {
-        $comments = Comment::query();
-        $comments = $this->commentService->applySorting($request, $comments);
+        $comments = $this->commentService->applySorting($request);
 
-        return CommentResource::collection($comments);
+        return $comments;
     }
 
 
     public function store(CommentRequest $request)
     {
-        $data = $request->validated();
-        $comment = $this->commentService->createComment($data);
+        
+        $response = $this->commentService->createComment($request);
 
-        return response()->json([
-            'message' => 'Comment is saved!',
-            'comment' => $comment
-        ], 201);
+        return $response;
     }
 }

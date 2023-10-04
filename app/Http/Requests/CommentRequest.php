@@ -18,7 +18,8 @@ class CommentRequest extends FormRequest
             'email' => 'required|email',
             'homepage' => 'nullable|url',
             'content' => 'required|string',
-            'parent_id' => 'nullable|integer',
+            'attachment' => 'nullable|file|mimes:txt,jpeg,png,jpg|max:5120',
+            'parent_id' => 'nullable',
         ];
     }
 }
