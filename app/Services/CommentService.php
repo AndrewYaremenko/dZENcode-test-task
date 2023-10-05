@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\CommentResource;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class CommentService
 {
@@ -70,7 +71,9 @@ class CommentService
                     });
                 }
 
-                $image->save(storage_path('app/public/attachments/' . $fileName));
+                $imageData = $image->encode();
+                $attachmentPath = 'public/attachments/' . $fileName;
+                Storage::put($attachmentPath, $imageData);
                 $comment->update(['attachment' => $fileName]);
                 $comment->update(['attachment_type' => 'image']);
             }
